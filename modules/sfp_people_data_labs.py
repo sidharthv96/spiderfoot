@@ -58,6 +58,7 @@ class sfp_people_data_labs(SpiderFootPlugin):
         "api_key": "People Data Source API Key.",
     }
 
+    sf = None
     # Tracking results can be helpful to avoid reporting/processing duplicates
     results = None
     produced = None
@@ -180,22 +181,22 @@ class sfp_people_data_labs(SpiderFootPlugin):
 
         self.data[eventType].append(eventData)
 
-        query_list = []
+        queryList = []
 
         for combination in self.combinations:
             if eventType in combination and self.isValidQuery(combination):
-                new_dict = {}
+                newDict = {}
                 for field in combination:
-                    new_dict[field] = self.data[field]
+                    newDict[field] = self.data[field]
 
-                keys, values = zip(*new_dict.items())
+                keys, values = zip(*newDict.items())
 
-                query_dicts = [dict(zip(keys, v))
-                               for v in itertools.product(*values)]
+                queryDicts = [dict(zip(keys, v))
+                              for v in itertools.product(*values)]
 
-                query_list.extend(query_dicts)
+                queryList.extend(queryDicts)
 
-        for query in query_list:
+        for query in queryList:
             # Whenever operating in a loop, call this to check whether the user
             # requested the scan to be aborted.
             if self.checkForStop():
@@ -206,6 +207,8 @@ class sfp_people_data_labs(SpiderFootPlugin):
 
             self.notifyListeners(SpiderFootEvent(
                 "RAW_RIR_DATA", str(rec), self.__name__, event))
+
+        return None
 
     def createEvents(self, rec, event):
 
@@ -266,10 +269,10 @@ class sfp_people_data_labs(SpiderFootPlugin):
                             continue
                         self.sendEvent(meta['event'], info, event)
 
-    def sendEvent(self, event_type, data, event):
-        info_key = f"{event_type}-{data}"
-        if info_key not in self.produced:
+    def sendEvent(self, eventType, data, event):
+        infoKey = f"{eventType}-{data}"
+        if infoKey not in self.produced:
             evt = SpiderFootEvent(
-                event_type, data, self.__name__, event)
-            self.produced[info_key] = True
+                eventType, data, self.__name__, event)
+            self.produced[infoKey] = True
             self.notifyListeners(evt)
