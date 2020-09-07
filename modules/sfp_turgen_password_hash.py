@@ -76,10 +76,6 @@ class sfp_turgen_password_hash(SpiderFootPlugin):
         for hashAlgo, hashval in hashes.items():
             evt = SpiderFootEvent(
                 "HASH", "[" + hashAlgo + "] " + str(hashval), self.__name__, event)
-            if event.moduleDataSource:
-                evt.moduleDataSource = event.moduleDataSource
-            else:
-                evt.moduleDataSource = "Unknown"
             self.notifyListeners(evt)
 
         return None

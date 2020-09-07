@@ -17,10 +17,10 @@ from netaddr import IPNetwork
 from sflib import SpiderFootPlugin, SpiderFootEvent
 
 
-class sfp_people_data_labs(SpiderFootPlugin):
+class sfp_turgen_people_data_labs(SpiderFootPlugin):
 
     meta = {
-        'name': "People Data Labs",
+        'name': "Turgen People Data Labs",
         'summary': "This looks up data from People Data Labs",
         'flags': ["tool", "apikey"],
         'useCases': ["Passive"],
